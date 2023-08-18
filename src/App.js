@@ -1,24 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Outlet } from 'react-router-dom';
+import Home from './routes/home/home.component';
+import Navigation from './routes/navigation/navigation.component';
+import SignIn from './components/sign-in/sign-in.component';
 
-function App() {
+// wild card character in React will be using * for 404 pages
+const ErrorPage = () => {
+  return (<h1> Page not found</h1>);
+}
+const Shop = () => {
+  return (<h1> shop Page</h1>);
+}
+
+
+const App = () => {
+
+  // now we are going to make route to the Home component that will be the base page of the Website
+  // Routes will contain multiple singular routes and we have concept of path and element in React
+  // where path -> includes the url string path  
+  // element -> the component it should take your component to ..
+  // when the path matches
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {/* these below are the sibling routes 
+      <Route path='/' element={<Home />}></Route>
+      <Route path='/nav' element={<NavBar />}></Route> */}
+     
+     {/* We are making nested route here /home/nav to show the bottom nav 
+      but we see that the home component is still visisble despite going to /home/nav url
+      to get rid of this we have to Add <Outlet> to the Parent component which is Home in this case
+       to tell that wehere it should go
+      *** So NavBar should normally stay same a top in each route so we can make it as Parent component
+      and nest all the routes inside it ****
+
+     
+     
+       similar to router-outlet in angular
+     */}
+
+
+
+
+     <Route path='/' element={<Navigation />}>
+        <Route path='/' element={<Home />}></Route>
+        <Route path='/shop' element={<Shop />}></Route>
+        <Route path='/sign-in' element={<SignIn/>}></Route>
+     </Route>
+
+      <Route path='*' element={<ErrorPage />}></Route>
+    
+    </Routes>
   );
 }
 
