@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
+import './index.scss';
+import { UserProvider } from './context/context.component';
+import { ProductsProvider } from './context/products.context';
+import { CartContextProvider } from './context/cart.context';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +17,14 @@ root.render(
   knows where we are in the path of our application and we can navigate more easily  */}
 
     <BrowserRouter>
-      <App />
+    <UserProvider>
+      <ProductsProvider>
+      <CartContextProvider>
+        <App />
+        </CartContextProvider>
+      </ProductsProvider>
+     
+    </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

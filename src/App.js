@@ -2,14 +2,15 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import Home from './routes/home/home.component';
 import Navigation from './routes/navigation/navigation.component';
 import SignIn from './components/sign-in/sign-in.component';
+import SignUpForm from './components/sign-up/sign-up.component';
+import Shop from './routes/shop/shop.component';
+import CheckOutPage from './components/check-out/check-out.component';
 
 // wild card character in React will be using * for 404 pages
 const ErrorPage = () => {
   return (<h1> Page not found</h1>);
 }
-const Shop = () => {
-  return (<h1> shop Page</h1>);
-}
+
 
 
 const App = () => {
@@ -44,7 +45,10 @@ const App = () => {
      <Route path='/' element={<Navigation />}>
         <Route path='/' element={<Home />}></Route>
         <Route path='/shop' element={<Shop />}></Route>
+        <Route path='/sign-up' element={<SignUpForm/>}></Route>
+
         <Route path='/sign-in' element={<SignIn/>}></Route>
+        <Route path="/checkout" element={<CheckOutPage/>}></Route>
      </Route>
 
       <Route path='*' element={<ErrorPage />}></Route>

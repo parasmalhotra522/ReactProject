@@ -4,7 +4,11 @@ import {
     getAuth,
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider
+    GoogleAuthProvider,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 } from 'firebase/auth';
 
 
@@ -37,6 +41,11 @@ const firebaseConfig = {
   export const signInWithGooglePopUp = () => signInWithPopup(auth, provider); 
 
 
+  // sign-in-with email and password
+  export const signInWithEmail = async(email, password) => await signInWithEmailAndPassword(auth, email, password);
+
+//   export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider);
+
   
   // ----- setting up the connection with the fire-store to do the work of the authentication
   // ----- getDoc() and setDoc() doesn't exactly give you certain object in the database it points
@@ -44,7 +53,7 @@ const firebaseConfig = {
 
   export const db = getFirestore(); // get the instance of the firestore
   
-  export const createUserDocumentFromAuth = async(userAuth) => {
+  export const createUserDocumentFromAuth = async(userAuth, additionalInformation={}) => {
     // userAuth is an object with which we have done the googleAuth so we need to take the unique id
     // from the object and make the entries to be stored in the database
     
@@ -69,7 +78,8 @@ const firebaseConfig = {
             await setDoc(userDocRef, {
                 displayName,
                 email,
-                createdAt
+                createdAt,
+                ...additionalInformation
             });
         } catch(err) {
             console.log("Error occured while creating the user", err);
@@ -79,4 +89,16 @@ const firebaseConfig = {
     return userDocRef;
 
 }
+
+export const createAuthUserWithEmailAndPassword = async(email, password) => {
+    if (!email || !password) return;  
+    return await createUserWithEmailAndPassword(auth, email, password);
+
+}
+
+
+export const SignOutUser = async() => {
+    return await signOut(auth);
+}
   
+export const onAuthStateChangedListener = async (callback) => await onAuthStateChanged(auth, callback);
