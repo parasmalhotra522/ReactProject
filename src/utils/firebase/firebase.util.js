@@ -8,13 +8,15 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+
 } from 'firebase/auth';
 
 
 // we store the data in the firestore which is again a service in the firebase
 
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, getDoc, getFirestore, setDoc, collection, writeBatch,
+     getDocs, query, QuerySnapshot } from 'firebase/firestore';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -53,6 +55,33 @@ const firebaseConfig = {
 
   export const db = getFirestore(); // get the instance of the firestore
   
+  export const addCollectionAndDocuments = async(collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    });
+    await batch.commit();
+    console.log("Data pushed to firestore successfully");
+  }
+
+  // fetching data from firestore in certain format
+  export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories');
+    const q = query(collectionRef);
+    const querySnapshot = await getDocs(q);
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot)=>{
+        const { title, items } = docSnapshot.data();
+        acc[title.toLowerCase()] = items;
+        return acc;
+    },{});
+    return categoryMap;
+  }
+
+
+
   export const createUserDocumentFromAuth = async(userAuth, additionalInformation={}) => {
     // userAuth is an object with which we have done the googleAuth so we need to take the unique id
     // from the object and make the entries to be stored in the database
@@ -102,3 +131,8 @@ export const SignOutUser = async() => {
 }
   
 export const onAuthStateChangedListener = async (callback) => await onAuthStateChanged(auth, callback);
+
+
+
+
+

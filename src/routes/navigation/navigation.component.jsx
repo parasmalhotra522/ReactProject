@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import "./navigation.component.scss";
+import {NavigationContainer, LogoContainer, NavLinks, NavLink} from  "./navigation.styles.jsx";
 import { Fragment, useContext } from "react";
 
 // we can import svg in React as component
@@ -37,29 +37,28 @@ const Navigation = () => {
     return (
       <Fragment>
         
-        <div className="navigation">
+        <NavigationContainer>
         {/* Link is similar to a tag in html */}
-            <Link className="logo-container" to='/'>
-                <div>
+            <LogoContainer to='/'>
+               
                <CrownLogo className="logo"/>
-                </div>
-            </Link>
+              
+            </LogoContainer>
 
-            <div className="nav-links-container">
-                <Link className="nav-link" to="/">Home</Link>
-                <Link className="nav-link" to="/shop">Shop</Link>
-                <Link className="nav-link" to="/sign-up">Sign Up</Link>
-                { currentUser ? (<Link className="nav-link" onClick={SignOutUserHandler} >Sign Out</Link>)
-                : (<Link className="nav-link" to="/sign-in">Sign In</Link>)
+            <NavLinks>
+                <NavLink to="/">Home</NavLink>
+                <NavLink to="/shop">Shop</NavLink>
+                { currentUser ? (<NavLink as='span'  onClick={SignOutUserHandler} >Sign Out</NavLink>)
+                : (<NavLink to="/sign-in">Sign In</NavLink>)
                 }
 
-                <Link className="nav-link">
-                  <CartIcon ></CartIcon>
-                </Link>
+                <NavLink className="nav-link">
+                  <CartIcon />
+                </NavLink>
                {isCartOpen &&  <CartDropDown/>}
                 
-            </div>
-        </div>
+            </NavLinks>
+            </NavigationContainer>
           <Outlet></Outlet>
     </Fragment>
     )
